@@ -318,4 +318,58 @@ ol{margin:4px 0 4px 18px;padding:0}
 <tr><td>☐ Butter type (before “100% butter”)</td><td>☐ 3 espresso taste notes from the barista (V10)</td><td>☐ Budget for models + 2–3 creators</td></tr>
 <tr><td>☐ Meta Pixel firing Purchase</td><td>☐ Which WhatsApp number takes box chats + night replies</td><td>☐ Who approves ads before they go live</td></tr></table>
 <div class='small' style='margin-top:8px'>Benchmarks are general Meta rules of thumb, not Kuwait-proven. Prices only from the Burrata site + catering highlight. Sources: 07-meta-plan.md, F&amp;B content research/04-burrata-video-plan.md, collection-stats.csv.</div></div>
-</main></body></html>
+</main><script id="burrata-editor">
+/* Owner-only editor. Hidden unless the URL has ?edit. Saving needs the owner's GitHub token (kept in this browser only). */
+(function(){
+  if(!/[?&]edit\b/.test(location.search)) return;
+  var REPO="jameellzx/burrata-brief", FILE="index.html", KEY="burrata_gh_token";
+  var SEL="h1,h2,h3,.line,.sub,.eyebrow,.money,.blabel,.note,.one,.hooks,.f,.small,.vt,.info>div,td,th,li,.rc b,.swipe";
+  var css=document.createElement("style"); css.id="ed-css";
+  css.textContent="#ed-bar{position:fixed;right:14px;bottom:14px;z-index:99;display:flex;gap:8px;font:600 14px -apple-system,Segoe UI,sans-serif}"+
+   "#ed-bar button{border:0;border-radius:24px;padding:11px 15px;box-shadow:0 4px 14px rgba(0,0,0,.18);cursor:pointer;background:#5A4E45;color:#fff}"+
+   "#ed-bar .sv{background:#7FA87F}#ed-bar .fg{background:#fff;color:#5A4E45}"+
+   "#ed-msg{position:fixed;left:50%;transform:translateX(-50%);bottom:72px;z-index:99;background:#3A3530;color:#fff;padding:8px 14px;border-radius:10px;font:14px sans-serif;display:none}"+
+   "body.ed [contenteditable=true]{outline:1px dashed #CF9478;outline-offset:2px;border-radius:4px}"+
+   "body.ed [contenteditable=true]:focus{outline:2px solid #CF9478;background:#FFF8EE}";
+  document.head.appendChild(css);
+  var bar=document.createElement("div"); bar.id="ed-bar";
+  bar.innerHTML='<button class="pen" title="Edit text">✏️ Edit</button><button class="sv" hidden>Save to live</button><button class="fg" hidden title="Forget the GitHub key on this browser">Forget key</button>';
+  var msg=document.createElement("div"); msg.id="ed-msg";
+  document.body.appendChild(bar); document.body.appendChild(msg);
+  var pen=bar.querySelector(".pen"), sv=bar.querySelector(".sv"), fg=bar.querySelector(".fg"), on=false;
+  function say(t,ms){msg.textContent=t;msg.style.display="block";clearTimeout(say.t);if(ms)say.t=setTimeout(function(){msg.style.display="none"},ms)}
+  function toggle(){
+    on=!on; document.body.classList.toggle("ed",on);
+    document.querySelectorAll(SEL).forEach(function(el){ if(el.closest("#ed-bar"))return; if(on) el.setAttribute("contenteditable","true"); else el.removeAttribute("contenteditable"); });
+    pen.textContent=on?"✓ Done":"✏️ Edit"; sv.hidden=!on; fg.hidden=!on;
+    if(on) say("Edit mode: tap any text to change it, then Save to live",3500);
+  }
+  function b64(s){var b=new TextEncoder().encode(s),r="";for(var i=0;i<b.length;i+=8192)r+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(r)}
+  function cleanHtml(){
+    var d=document.documentElement.cloneNode(true);
+    d.querySelectorAll("#ed-bar,#ed-msg,#ed-css").forEach(function(x){x.remove()});
+    d.querySelectorAll("[contenteditable]").forEach(function(x){x.removeAttribute("contenteditable")});
+    d.querySelectorAll("details[open]").forEach(function(x){x.removeAttribute("open")});
+    var body=d.querySelector("body"); if(body) body.classList.remove("ed"); if(body&&!body.className) body.removeAttribute("class");
+    return "<!DOCTYPE html>\n"+d.outerHTML;
+  }
+  async function save(){
+    var tok=localStorage.getItem(KEY);
+    if(!tok){ tok=prompt("Paste your GitHub token (only for "+REPO+"). It stays in this browser."); if(!tok) return; tok=tok.trim(); }
+    var api="https://api.github.com/repos/"+REPO+"/contents/"+FILE, h={"Authorization":"Bearer "+tok,"Accept":"application/vnd.github+json"};
+    try{
+      say("Saving…");
+      var cur=await fetch(api+"?ref=main",{headers:h,cache:"no-store"});
+      if(cur.status===401||cur.status===403||cur.status===404){ localStorage.removeItem(KEY); throw new Error("GitHub said no ("+cur.status+"). Check the token: it needs Contents read+write on "+REPO+"."); }
+      var sha=(await cur.json()).sha;
+      var put=await fetch(api,{method:"PUT",headers:h,body:JSON.stringify({message:"Edit brief text from the page",content:b64(cleanHtml()),sha:sha,branch:"main"})});
+      if(!put.ok) throw new Error("Save failed ("+put.status+"): "+((await put.json()).message||""));
+      localStorage.setItem(KEY,tok);
+      say("Saved. The live page updates in about 1 minute.",5000);
+    }catch(e){ say(e.message,8000); }
+  }
+  pen.onclick=toggle; sv.onclick=save;
+  fg.onclick=function(){localStorage.removeItem(KEY);say("GitHub key removed from this browser.",3000)};
+})();
+</script>
+</body></html>
