@@ -283,7 +283,7 @@ th{background:#E6EEF3;color:var(--ink)}tr:nth-child(even) td{background:var(--so
    "body.ed [contenteditable=true]:focus{outline:2px solid #CF9478;background:#FFF8EE}";
   document.head.appendChild(css);
   var bar=document.createElement("div"); bar.id="ed-bar";
-  bar.innerHTML='<button class="pen" title="Edit text"> Edit</button><button class="sv" hidden>Save to live</button><button class="fg" hidden title="Forget the GitHub key on this browser">Forget key</button>';
+  bar.innerHTML='<button class="pen" title="Edit text">Edit</button><button class="sv" hidden>Save to live</button><button class="fg" hidden title="Forget the GitHub key on this browser">Forget key</button>';
   var msg=document.createElement("div"); msg.id="ed-msg";
   document.body.appendChild(bar); document.body.appendChild(msg);
   var pen=bar.querySelector(".pen"), sv=bar.querySelector(".sv"), fg=bar.querySelector(".fg"), on=false;
@@ -291,7 +291,7 @@ th{background:#E6EEF3;color:var(--ink)}tr:nth-child(even) td{background:var(--so
   function toggle(){
     on=!on; document.body.classList.toggle("ed",on);
     document.querySelectorAll(SEL).forEach(function(el){ if(el.closest("#ed-bar"))return; if(on) el.setAttribute("contenteditable","true"); else el.removeAttribute("contenteditable"); });
-    pen.textContent=on?" Done":" Edit"; sv.hidden=!on; fg.hidden=!on;
+    pen.textContent=on?"Done":"Edit"; sv.hidden=!on; fg.hidden=!on;
     if(on) say("Edit mode: tap any text to change it, then Save to live",3500);
   }
   function b64(s){var b=new TextEncoder().encode(s),r="";for(var i=0;i<b.length;i+=8192)r+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(r)}
